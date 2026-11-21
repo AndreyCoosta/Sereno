@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sereno</title>
+  <link rel="stylesheet" href="../ui/kindle.css">
+  <link rel="stylesheet" href="../ui/appearance.css">
+  <link rel="stylesheet" href="popup.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body>
+  <header class="home-head">
+    <h1>Sereno</h1>
+    <button id="masterBtn" class="round-btn" type="button" aria-pressed="true" data-i18n-title="darkMode" title="Modo escuro" data-i18n-aria="darkMode" aria-label="Modo escuro">
+      <svg class="ico-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      <svg class="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+    </button>
+  </header>
+
+  <section class="sheet" id="appearance"></section>
+
+  <section class="sheet">
+    <label class="ap-toggle">
+      <span><strong data-i18n="openPdfsDark">Abrir PDFs no modo escuro</strong></span>
+      <span class="switch"><input type="checkbox" id="autoOpen"><span></span></span>
+    </label>
+    <p class="notice" id="fileNotice" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/></svg>
+      <span data-i18n="fileAccessNotice">Para abrir PDFs do computador, ative “Permitir acesso a URLs de arquivo” em edge://extensions › Sereno › Detalhes.</span>
+    </p>
+  </section>
+
+  <section class="sheet apply">
+    <button id="applyTab" class="k-button" data-i18n="applyTheme">Aplicar tema nessa guia</button>
+    <p class="msg" id="applyMsg" hidden></p>
+  </section>
+
+  <section class="sheet rate-card" id="rateCard" hidden>
+    <p data-i18n="rateAsk">Está gostando do Sereno? Uma avaliação sincera na loja ajuda muito.</p>
+    <div class="rate-card-actions">
+      <button type="button" class="rate-card-btn" id="rateNever" data-i18n="rateNever">Não quero</button>
+      <button type="button" class="rate-card-btn rate-card-yes" id="rateCardNow" data-i18n="rateNow">Avaliar</button>
+    </div>
+  </section>
+
+  <footer class="foot" id="foot" hidden>
+    <a id="report" href="#" data-i18n="reportProblem">Relatar um problema</a>
+  </footer>
+</body>
+</html>

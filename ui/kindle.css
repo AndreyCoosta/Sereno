@@ -1,0 +1,133 @@
+/* Visual inspirado no app Kindle para iOS (modo escuro).
+ * Fontes: o Kindle usa Bookerly (títulos e leitura) e Amazon Ember (interface), que são
+ * proprietárias da Amazon. Se estiverem instaladas no computador, são usadas; senão entram
+ * as alternativas livres mais próximas, que vão junto com a extensão:
+ *   Bookerly → Literata (serifada de leitura digital) · Amazon Ember → Inter. */
+
+@font-face {
+  font-family: "Literata PDK";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url("../fonts/literata-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Literata PDK";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url("../fonts/literata-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter PDK";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter PDK";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../fonts/inter-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  color-scheme: dark;
+  /* fontes */
+  --k-serif: "Bookerly", "Bookerly Display", "Literata PDK", Georgia, serif;
+  --k-sans: "Amazon Ember", "Inter PDK", -apple-system, "Segoe UI", system-ui, sans-serif;
+  /* cores do Kindle iOS (escuro) */
+  --k-header: #262626;     /* cabeçalho */
+  --k-surface: #1d1d1d;    /* fundo das seções */
+  --k-band: #1f1f1f;       /* faixa dos filtros */
+  --k-divider: #101113;    /* faixa entre seções */
+  --k-raised: #2c2c2e;     /* cartões e painéis */
+  --k-field: #282828;      /* campo de pesquisa */
+  --k-border: #4c4c4c;     /* contorno das pílulas */
+  --k-line: #38383a;       /* linhas finas */
+  --k-text: #f8f8f8;
+  --k-muted: #bdbdbf;
+  --k-dim: #8e8e93;
+  --k-pill-on: #e7e7e7;    /* pílula selecionada */
+  --k-pill-on-text: #000;
+  --k-accent: #6ddaff;     /* azul do Kindle (aba ativa) */
+  --k-orange: #e28738;
+}
+
+/* Pílula de filtro ("Explorar · Todas · Kindle+") */
+.k-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 38px; padding: 0 16px;
+  font: 500 16px/1 var(--k-sans);
+  color: var(--k-text);
+  background: transparent;
+  border: 1.5px solid var(--k-border);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.k-pill:hover { border-color: #6a6a6a; }
+.k-pill[aria-checked="true"], .k-pill[aria-pressed="true"] {
+  background: var(--k-pill-on); color: var(--k-pill-on-text); border-color: var(--k-pill-on); font-weight: 600;
+}
+
+/* Botão grande ("Assine Kindle+ hoje") */
+.k-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 46px; padding: 0 26px;
+  font: 500 16px/1 var(--k-sans);
+  color: #0b0b0b;
+  background: var(--k-accent);
+  border: 0; border-radius: 999px;
+  cursor: pointer;
+}
+.k-button:hover { filter: brightness(1.06); }
+.k-button:disabled { opacity: .45; cursor: default; filter: none; }
+
+/* Interruptor estilo iOS */
+.switch { position: relative; flex: none; width: 46px; height: 28px; }
+.switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 14px; background: #3a3a3c; transition: background .2s; pointer-events: none; }
+.switch span::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 24px; height: 24px; border-radius: 50%; background: #fff;
+  box-shadow: 0 2px 4px rgb(0 0 0 / .35);
+  transition: transform .2s;
+}
+.switch input:checked + span { background: var(--k-accent); }
+.switch input:checked + span::after { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--k-accent); outline-offset: 2px; }
+
+/* Controle deslizante estilo iOS */
+input[type="range"].k-range {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 28px; margin: 0;
+  background: transparent; border: 0; padding: 0;
+  --fill: 0%;
+}
+input[type="range"].k-range::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 2px;
+  background: linear-gradient(to right, var(--k-track-fill, var(--k-accent)) var(--fill), #48484a var(--fill));
+}
+input[type="range"].k-range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; margin-top: -9px;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / .4);
+}
+input[type="range"].k-range:focus-visible { outline: none; }
+input[type="range"].k-range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--k-accent); outline-offset: 2px; }
+
+/* Título de seção ("Da sua biblioteca") */
+.k-title {
+  margin: 0;
+  font: 700 19px/1.2 var(--k-serif);
+  color: var(--k-text);
+  letter-spacing: -.005em;
+}

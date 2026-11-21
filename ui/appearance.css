@@ -1,0 +1,126 @@
+/* Painel de aparência (leitor e popup) — estilo Kindle iOS. Depende de ui/kindle.css. */
+.ap { display: block; font-family: var(--k-sans); color: var(--k-text); }
+.ap-view { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+.ap-view[hidden] { display: none; }
+.ap-view > *, .ap-section > * { min-width: 0; }
+.ap-section { display: grid; gap: 12px; }
+.ap-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ap-row output { font: 500 15px var(--k-sans); color: var(--k-muted); font-variant-numeric: tabular-nums; }
+
+/* títulos de seção em serifada, como "Da sua biblioteca" */
+.ap-label { margin: 0; font: 700 20px/1.2 var(--k-serif); color: var(--k-text); }
+
+/* Modo escuro (interruptor principal) */
+.ap-master { padding-bottom: 18px; border-bottom: 1px solid var(--k-line); }
+.ap-master[hidden] { display: none; }
+.ap .ap-master strong { font: 700 22px/1.2 var(--k-serif); }
+
+/* Temas: pílulas */
+.ap-themes { display: flex; flex-wrap: wrap; gap: 8px; }
+.ap-theme { padding: 0 14px 0 8px; }
+.ap-theme .ap-swatch {
+  flex: none;
+  width: 20px; height: 20px; border-radius: 50%;
+  font-size: 0;
+  background: var(--sw-fg);
+  box-shadow: inset 0 0 0 6px var(--sw-bg), 0 0 0 1px rgb(255 255 255 / .22);
+}
+.ap-theme[aria-checked="true"] .ap-swatch { box-shadow: inset 0 0 0 6px var(--sw-bg), 0 0 0 1px rgb(0 0 0 / .25); }
+.ap-theme-label { white-space: nowrap; }
+.ap-off .ap-themes { opacity: .5; }
+
+/* Interruptores */
+.ap-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; }
+.ap-toggle strong { display: block; font: 500 17px/1.3 var(--k-sans); }
+
+/* ---------- Tela "Personalizado" ---------- */
+.ap-head { display: flex; align-items: center; gap: 6px; margin: -6px 0 -4px -8px; }
+.ap-title { font: 700 22px/1.2 var(--k-serif); }
+
+.ap .ap-icon {
+  width: 34px; height: 34px; padding: 0; flex: none;
+  display: inline-grid; place-items: center;
+  background: transparent; color: var(--k-text);
+  border: 0; border-radius: 50%; cursor: pointer;
+}
+.ap .ap-icon:hover { background: rgb(255 255 255 / .08); }
+.ap-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+.ap-preview {
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .1);
+  font: 400 17px/1.3 var(--k-serif);
+}
+.ap-preview-big { font: 700 30px/1 var(--k-serif); }
+
+.ap-colors { display: flex; flex-wrap: wrap; gap: 10px; }
+.ap-color {
+  position: relative;
+  width: 30px; height: 30px; padding: 0;
+  border-radius: 50%; border: 0;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2);
+  cursor: pointer;
+}
+.ap-color[aria-checked="true"], .ap-picker.custom {
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2), 0 0 0 2px var(--bg, var(--k-surface)), 0 0 0 4px var(--k-text);
+}
+.ap-color:focus-visible, .ap-picker:focus-within { outline: 2px solid var(--k-accent); outline-offset: 4px; }
+.ap-picker { display: inline-block; background: conic-gradient(#ff6b6b, #ffd166, #a6e3a1, #6bd5ff, #b39dff, #ff8fd1, #ff6b6b); }
+.ap-picker.custom { background: var(--picked); }
+.ap-picker::after {
+  content: "+"; position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font: 600 16px/1 var(--k-sans); color: #fff; text-shadow: 0 0 3px rgb(0 0 0 / .8);
+  pointer-events: none;
+}
+.ap-picker.custom::after { content: ""; }
+.ap-picker input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+
+.ap-contrast { font: 500 13.5px var(--k-sans); color: var(--k-muted); }
+.ap-contrast.low { color: var(--k-orange); }
+
+/* Presets */
+.ap-count { font: 500 14px var(--k-sans); color: var(--k-dim); font-variant-numeric: tabular-nums; }
+.ap-presets { display: grid; gap: 8px; }
+.ap-slot {
+  position: relative;
+  display: flex; align-items: center; gap: 8px;
+  min-height: 52px;
+  padding: 6px 6px 6px 8px;
+  background: var(--k-raised);
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+}
+.ap-slot[aria-current] { border-color: var(--k-text); }
+.ap-slot.empty { padding: 0; background: transparent; border: 1.5px dashed var(--k-border); }
+.ap-slot-apply { flex: none; height: auto; padding: 0; background: transparent; border: 0; cursor: pointer; }
+.ap-slot .ap-swatch {
+  display: grid; place-items: center;
+  width: 40px; height: 32px; border-radius: 8px;
+  font: 700 14px var(--k-serif);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .14);
+}
+.ap .ap-slot-name {
+  flex: 1 1 0; min-width: 0; width: 0;
+  height: 34px; padding: 0 8px;
+  font: 500 15px var(--k-sans); color: var(--k-text);
+  background: transparent; border: 1px solid transparent; border-radius: 8px;
+}
+.ap .ap-slot-name:hover { border-color: var(--k-line); }
+.ap .ap-slot-name:focus { border-color: var(--k-accent); outline: none; background: rgb(255 255 255 / .04); }
+.ap .ap-slot-new {
+  flex: 1; height: 50px; padding: 0 16px;
+  font: 500 15px var(--k-sans); color: var(--k-muted); text-align: left;
+  background: transparent; border: 0; border-radius: 14px; cursor: pointer;
+}
+.ap .ap-slot-new:hover { color: var(--k-text); background: rgb(255 255 255 / .04); }
+.ap-slot.confirm [data-r="del"] { color: #ff8a8a; background: rgb(255 90 90 / .15); }
+.ap-slot.flash::after {
+  content: attr(data-flash);
+  position: absolute; right: 84px; top: 50%; transform: translateY(-50%);
+  padding: 3px 10px; border-radius: 999px;
+  font: 600 12px var(--k-sans); background: var(--k-pill-on); color: #000;
+  pointer-events: none;
+}

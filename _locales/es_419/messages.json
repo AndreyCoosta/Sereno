@@ -1,0 +1,463 @@
+{
+  "extName": {
+    "message": "Sereno — PDF Dark Mode Reader"
+  },
+  "extDescription": {
+    "message": "Abre cualquier PDF en modo oscuro y conserva los colores reales de las imágenes."
+  },
+  "cmdToggle": {
+    "message": "Activar o desactivar el modo oscuro"
+  },
+  "contents": {
+    "message": "Índice"
+  },
+  "search": {
+    "message": "Buscar"
+  },
+  "searchTitle": {
+    "message": "Buscar (Ctrl+F)"
+  },
+  "highlighter": {
+    "message": "Resaltador"
+  },
+  "highlighterTitle": {
+    "message": "Resaltador (H)"
+  },
+  "eraser": {
+    "message": "Borrador"
+  },
+  "eraserTitle": {
+    "message": "Borrador (E)"
+  },
+  "appearance": {
+    "message": "Apariencia y modo oscuro"
+  },
+  "appearanceTitle": {
+    "message": "Apariencia y modo oscuro (A)"
+  },
+  "appearancePanel": {
+    "message": "Apariencia"
+  },
+  "print": {
+    "message": "Imprimir con el tema"
+  },
+  "printTitle": {
+    "message": "Imprimir con el tema (Ctrl+P)"
+  },
+  "save": {
+    "message": "Guardar"
+  },
+  "saveTitle": {
+    "message": "Guardar (Ctrl+S)"
+  },
+  "saveAs": {
+    "message": "Guardar como"
+  },
+  "saveAsTitle": {
+    "message": "Guardar como (Ctrl+Mayús+S)"
+  },
+  "quickSaveWith": {
+    "message": "Guardar con el tema (Ctrl+S)"
+  },
+  "quickSaveWithout": {
+    "message": "Guardar sin el tema (Ctrl+S)"
+  },
+  "navigation": {
+    "message": "Navegación"
+  },
+  "prevPage": {
+    "message": "Página anterior"
+  },
+  "prevPageTitle": {
+    "message": "Página anterior (←)"
+  },
+  "nextPage": {
+    "message": "Página siguiente"
+  },
+  "nextPageTitle": {
+    "message": "Página siguiente (→)"
+  },
+  "goToPage": {
+    "message": "Ir a la página"
+  },
+  "currentPage": {
+    "message": "Página actual"
+  },
+  "pageLabel": {
+    "message": "Página"
+  },
+  "ofLabel": {
+    "message": "de"
+  },
+  "zoom": {
+    "message": "Zoom"
+  },
+  "zoomOut": {
+    "message": "Reducir"
+  },
+  "zoomOutTitle": {
+    "message": "Reducir (Ctrl −)"
+  },
+  "zoomIn": {
+    "message": "Ampliar"
+  },
+  "zoomInTitle": {
+    "message": "Ampliar (Ctrl +)"
+  },
+  "zoomWidth": {
+    "message": "Ancho de página"
+  },
+  "zoomFit": {
+    "message": "Página completa"
+  },
+  "zoomAuto": {
+    "message": "Automático"
+  },
+  "zoomAutoPct": {
+    "message": "Automático ($1%)"
+  },
+  "withTheme": {
+    "message": "Con el tema"
+  },
+  "withoutTheme": {
+    "message": "Sin el tema"
+  },
+  "ctrlSWithTheme": {
+    "message": "Ctrl+S con el tema"
+  },
+  "pdfDocument": {
+    "message": "Documento PDF"
+  },
+  "savedName": {
+    "message": "Guardado: $1"
+  },
+  "savedDownloads": {
+    "message": "Guardado en Descargas: $1"
+  },
+  "generatingThemed": {
+    "message": "Creando el PDF con el tema…"
+  },
+  "savingHighlights": {
+    "message": "Guardando tus resaltados…"
+  },
+  "pickFileOnce": {
+    "message": "Para guardar en este mismo archivo, selecciónalo una vez."
+  },
+  "chooseTheFile": {
+    "message": "Elegir el archivo"
+  },
+  "saveOriginal": {
+    "message": "Guardar original"
+  },
+  "errProtected": {
+    "message": "Este PDF está protegido contra cambios, así que no se puede guardar con el tema."
+  },
+  "errSave": {
+    "message": "No se pudo guardar el PDF."
+  },
+  "themedSuffix": {
+    "message": "tema oscuro"
+  },
+  "writeInterrupted": {
+    "message": "se interrumpió el guardado"
+  },
+  "hlColor": {
+    "message": "Color del resaltador"
+  },
+  "searchPlaceholder": {
+    "message": "Buscar en el documento"
+  },
+  "searchPrev": {
+    "message": "Resultado anterior"
+  },
+  "searchPrevTitle": {
+    "message": "Anterior (Mayús+Intro)"
+  },
+  "searchNext": {
+    "message": "Resultado siguiente"
+  },
+  "searchNextTitle": {
+    "message": "Siguiente (Intro)"
+  },
+  "searchClose": {
+    "message": "Cerrar búsqueda"
+  },
+  "closeEscTitle": {
+    "message": "Cerrar (Esc)"
+  },
+  "searching": {
+    "message": "Buscando…"
+  },
+  "searchCount": {
+    "message": "$1 de $2"
+  },
+  "noResults": {
+    "message": "Sin resultados"
+  },
+  "colorYellow": {
+    "message": "Amarillo"
+  },
+  "colorGreen": {
+    "message": "Verde"
+  },
+  "colorPink": {
+    "message": "Rosa"
+  },
+  "colorBlue": {
+    "message": "Azul"
+  },
+  "highlightMark": {
+    "message": "Resaltado"
+  },
+  "dropHere": {
+    "message": "Arrastra un PDF aquí"
+  },
+  "or": {
+    "message": "o"
+  },
+  "chooseFile": {
+    "message": "Elegir archivo"
+  },
+  "loading": {
+    "message": "Cargando…"
+  },
+  "loadingPdf": {
+    "message": "Cargando PDF…"
+  },
+  "loadingPdfPct": {
+    "message": "Cargando PDF… $1%"
+  },
+  "wrongPassword": {
+    "message": "Contraseña incorrecta. Inténtalo de nuevo:"
+  },
+  "needPassword": {
+    "message": "Este PDF está protegido con contraseña. Introduce la contraseña:"
+  },
+  "passwordCancelled": {
+    "message": "El PDF está protegido con contraseña y no se abrió."
+  },
+  "alreadyThemed": {
+    "message": "Este PDF ya se guardó con el tema"
+  },
+  "errLocalFile": {
+    "message": "No se pudo leer el archivo local. En edge://extensions, abre los detalles de Sereno y activa “Permitir el acceso a las URL de archivo”."
+  },
+  "errInvalid": {
+    "message": "Este archivo no parece ser un PDF válido."
+  },
+  "errMissing": {
+    "message": "PDF no encontrado (404)."
+  },
+  "errServer": {
+    "message": "El servidor devolvió un error ($1)."
+  },
+  "unknown": {
+    "message": "desconocido"
+  },
+  "errOpen": {
+    "message": "No se pudo abrir el PDF: $1"
+  },
+  "openInOriginal": {
+    "message": "Abrir en el visor original"
+  },
+  "openAnother": {
+    "message": "Abrir otro archivo"
+  },
+  "notPdf": {
+    "message": "Ese archivo no es un PDF."
+  },
+  "chooseAnother": {
+    "message": "Elegir otro"
+  },
+  "cancel": {
+    "message": "Cancelar"
+  },
+  "close": {
+    "message": "Cerrar"
+  },
+  "preparingPrint": {
+    "message": "Preparando la impresión… $1 de $2"
+  },
+  "errPrint": {
+    "message": "No se pudo preparar la impresión."
+  },
+  "noOutline": {
+    "message": "Este PDF no tiene índice."
+  },
+  "expand": {
+    "message": "Expandir"
+  },
+  "untitled": {
+    "message": "(sin título)"
+  },
+  "darkMode": {
+    "message": "Modo oscuro"
+  },
+  "darkModeOn": {
+    "message": "Modo oscuro: activado"
+  },
+  "darkModeOff": {
+    "message": "Modo oscuro: desactivado"
+  },
+  "openPdfsDark": {
+    "message": "Abrir PDF en modo oscuro"
+  },
+  "applyTheme": {
+    "message": "Aplicar tema a esta pestaña"
+  },
+  "removeTheme": {
+    "message": "Quitar tema de esta pestaña"
+  },
+  "tabProtected": {
+    "message": "Edge protege esta pestaña."
+  },
+  "theme": {
+    "message": "Tema"
+  },
+  "blueLight": {
+    "message": "Filtro de luz azul"
+  },
+  "off": {
+    "message": "Desactivado"
+  },
+  "monoText": {
+    "message": "Texto de un solo color"
+  },
+  "keepImages": {
+    "message": "Mantener colores de las imágenes"
+  },
+  "back": {
+    "message": "Atrás"
+  },
+  "textColor": {
+    "message": "Color del texto"
+  },
+  "bgColor": {
+    "message": "Color de fondo"
+  },
+  "myPresets": {
+    "message": "Mis ajustes"
+  },
+  "pickOtherColor": {
+    "message": "Elegir otro color"
+  },
+  "pickTextColor": {
+    "message": "Elegir color del texto"
+  },
+  "pickBgColor": {
+    "message": "Elegir color de fondo"
+  },
+  "updateWithCurrent": {
+    "message": "Actualizar con los colores actuales"
+  },
+  "deleteLabel": {
+    "message": "Eliminar"
+  },
+  "savePreset": {
+    "message": "+ Guardar ajuste"
+  },
+  "presetN": {
+    "message": "Ajuste $1"
+  },
+  "usePreset": {
+    "message": "Usar $1"
+  },
+  "usePresetQuoted": {
+    "message": "Usar “$1”"
+  },
+  "presetNameN": {
+    "message": "Nombre del ajuste $1"
+  },
+  "saveInSlot": {
+    "message": "Guardar los colores actuales en el espacio $1"
+  },
+  "savedShort": {
+    "message": "Guardado"
+  },
+  "clickAgainDelete": {
+    "message": "Haz clic de nuevo para eliminar"
+  },
+  "lowContrast": {
+    "message": "Contraste bajo"
+  },
+  "contrastRatio": {
+    "message": "Contraste $1:1"
+  },
+  "themeDark": {
+    "message": "Oscuro"
+  },
+  "themeBlack": {
+    "message": "Negro"
+  },
+  "themeReading": {
+    "message": "Lectura"
+  },
+  "themeSepia": {
+    "message": "Sepia"
+  },
+  "themeGray": {
+    "message": "Gris"
+  },
+  "themeCustom": {
+    "message": "Personalizado"
+  },
+  "readingHint": {
+    "message": "Tonos cálidos, sin luz azul — para leer de noche"
+  },
+  "cWhite": {
+    "message": "Blanco"
+  },
+  "cSoftWhite": {
+    "message": "Blanco suave"
+  },
+  "cLightGray": {
+    "message": "Gris claro"
+  },
+  "cCream": {
+    "message": "Crema"
+  },
+  "cAmber": {
+    "message": "Ámbar"
+  },
+  "cBlack": {
+    "message": "Negro"
+  },
+  "cCharcoal": {
+    "message": "Carbón"
+  },
+  "cGraphite": {
+    "message": "Grafito"
+  },
+  "cCoffee": {
+    "message": "Café"
+  },
+  "cDarkGreen": {
+    "message": "Verde oscuro"
+  },
+  "cNavy": {
+    "message": "Azul marino"
+  },
+  "localeCode": {
+    "message": "es",
+    "description": "Idioma deste arquivo (usado para corrigir a escolha de idioma regional)"
+  },
+  "fileAccessNotice": {
+    "message": "Para abrir PDF de la computadora, activa «Permitir el acceso a las URL de archivo» en edge://extensions › Sereno › Detalles."
+  },
+  "rateAsk": {
+    "message": "¿Te gusta Sereno? Una reseña sincera en la tienda ayuda mucho."
+  },
+  "rateNow": {
+    "message": "Calificar"
+  },
+  "rateLater": {
+    "message": "Ahora no"
+  },
+  "reportProblem": {
+    "message": "Reportar un problema"
+  },
+  "rateNever": {
+    "message": "No, gracias",
+    "description": "Popup rating card: decline for good"
+  }
+}

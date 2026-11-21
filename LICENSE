@@ -1,0 +1,23 @@
+Copyright (c) 2026 AndreyCoosta. All rights reserved.
+
+This software and its source code, design, icons and documentation (the
+"Software") are the exclusive property of the copyright holder.
+
+No permission is granted to copy, modify, merge, publish, distribute,
+sublicense, sell or create derivative works of the Software, in whole or in
+part, without prior written permission from the copyright holder. Viewing the
+source code on GitHub does not grant any license to use it.
+
+Installing the extension from the Microsoft Edge Add-ons store for personal use
+is permitted under that store's terms.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+THIRD-PARTY COMPONENTS
+The following bundled components are not covered by this notice and remain
+under their own licenses:
+- pdf.js (lib/), Apache License 2.0, Copyright Mozilla Foundation
+- pdf-lib (lib/), MIT License, Copyright Andrew Dillon
+- Literata and Inter fonts (fonts/), SIL Open Font License 1.1

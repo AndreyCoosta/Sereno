@@ -1,0 +1,525 @@
+/* Leitor — visual inspirado no app Kindle para iOS. Depende de ui/kindle.css. */
+:root {
+  --ui-bg: #141414;
+  --paper-bg: #1d1d1d;
+  --bar-bg: var(--k-header);
+  --bar-border: var(--k-line);
+  --text: var(--k-text);
+  --muted: var(--k-muted);
+  --control-bg: #333335;
+  --control-hover: rgb(255 255 255 / .09);
+  --accent: var(--k-accent);
+  --page-gap: 16px;
+  --top: 54px;
+  font-family: var(--k-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--ui-bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.defs { position: absolute; width: 0; height: 0; }
+svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+button, select, input { font: inherit; color: inherit; }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: .35; cursor: default; }
+
+button.icon {
+  width: 40px; height: 40px; padding: 0;
+  display: inline-grid; place-items: center;
+  background: transparent; border: 0; border-radius: 50%;
+  cursor: pointer;
+}
+button.icon:hover:not(:disabled) { background: var(--control-hover); }
+button.icon svg { width: 22px; height: 22px; }
+button.toggle[aria-pressed="true"] { background: var(--k-pill-on); color: #000; }
+button.aa { font: 600 19px/1 var(--k-serif); letter-spacing: -.02em; }
+button.primary {
+  height: 40px; padding: 0 22px;
+  font: 600 15px var(--k-sans); color: #0b0b0b;
+  background: var(--k-accent); border: 0; border-radius: 999px; cursor: pointer;
+}
+button.primary:hover { filter: brightness(1.06); }
+.muted { color: var(--muted); white-space: nowrap; }
+
+/* ---------- Barra superior ---------- */
+.toolbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--top);
+  display: grid;
+  grid-template-columns: 1fr minmax(0, auto) 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 0 10px;
+  background: var(--k-header);
+  z-index: 10;
+  user-select: none;
+}
+.group { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.group.end { justify-content: flex-end; }
+.title {
+  max-width: 46vw;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font: 600 17px/1.2 var(--k-serif);
+  text-align: center;
+}
+#sidebarBtn[aria-expanded="true"], #searchBtn[aria-expanded="true"], #appearanceBtn[aria-expanded="true"] {
+  background: var(--k-pill-on); color: #000;
+}
+
+/* ---------- Barra inferior flutuante (como a barra de abas do Kindle) ---------- */
+.bottombar {
+  position: fixed;
+  left: 50%; bottom: 18px;
+  transform: translateX(-50%);
+  width: min(720px, calc(100% - 32px));
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 10px;
+  background: rgb(58 58 60 / .62);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid rgb(255 255 255 / .12);
+  border-radius: 999px;
+  box-shadow: 0 12px 34px rgb(0 0 0 / .45);
+  z-index: 10;
+  user-select: none;
+}
+.bottombar .progress { flex: 1; min-width: 0; display: grid; gap: 0; padding: 0 6px; }
+.bottombar .k-range { height: 22px; }
+.progress-label {
+  display: flex; justify-content: center; align-items: center; gap: 6px;
+  font: 500 12.5px var(--k-sans); color: var(--k-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.progress-label .dot { opacity: .6; }
+#pageNum {
+  width: 3.4ch; height: 20px; padding: 0 2px;
+  font: 600 12.5px var(--k-sans); color: var(--k-text); text-align: center;
+  background: rgb(255 255 255 / .08); border: 0; border-radius: 6px;
+}
+.sep { flex: none; width: 1px; height: 26px; background: rgb(255 255 255 / .16); margin: 0 6px; }
+/* Zoom: botão em pílula + menu no estilo dos outros painéis (o <select> fica escondido e guarda o valor) */
+.zoom-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 12px 0 16px;
+  font: 500 15px var(--k-sans); color: var(--k-text); white-space: nowrap;
+  background: rgb(255 255 255 / .08); border: 0; border-radius: 999px;
+  cursor: pointer;
+}
+.zoom-btn:hover, .zoom-btn[aria-expanded="true"] { background: rgb(255 255 255 / .14); }
+.zoom-btn:focus-visible { outline: 2px solid var(--k-accent); outline-offset: 2px; }
+.zoom-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--k-muted); }
+.zoom-menu {
+  position: fixed;
+  width: 230px; max-height: calc(100vh - 120px); overflow: auto;
+  display: grid; gap: 2px;
+  padding: 8px;
+  background: var(--k-header);
+  border: 1px solid var(--k-line);
+  border-radius: 20px;
+  box-shadow: 0 18px 44px rgb(0 0 0 / .55);
+  z-index: 16;
+}
+.zoom-menu[hidden] { display: none; }
+.zoom-menu hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--k-line); }
+.zoom-menu button {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  height: 42px; padding: 0 14px;
+  font: 500 15px var(--k-sans); color: var(--k-text); text-align: left;
+  background: transparent; border: 0; border-radius: 12px; cursor: pointer;
+}
+.zoom-menu button:hover, .zoom-menu button:focus-visible { background: var(--k-raised); outline: none; }
+.zoom-menu button[aria-checked="true"] { font-weight: 600; }
+.zoom-menu button svg { width: 18px; height: 18px; fill: none; stroke: var(--k-accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; visibility: hidden; }
+.zoom-menu button[aria-checked="true"] svg { visibility: visible; }
+body.warm .zoom-menu { filter: url(#pdf-ui-filter); }
+.bottombar button.icon { width: 36px; height: 36px; }
+
+/* Convite para avaliar: uma linha a mais dentro da barra inferior (aparece uma única vez) */
+.bottombar.asking { flex-wrap: wrap; border-radius: 24px; row-gap: 2px; }
+.rate {
+  flex: 1 0 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 4px 6px 8px 10px;
+  border-bottom: 1px solid rgb(255 255 255 / .10);
+  font: 500 15px/1.4 var(--k-sans); color: var(--k-text);
+}
+.rate[hidden] { display: none; }
+.rate-actions { flex: none; display: flex; gap: 6px; }
+.rate-btn {
+  height: 34px; padding: 0 16px;
+  font: 500 15px var(--k-sans); color: var(--k-text);
+  background: rgb(255 255 255 / .08); border: 0; border-radius: 999px; cursor: pointer;
+}
+.rate-btn:hover { background: rgb(255 255 255 / .14); }
+.rate-btn.rate-yes { background: var(--k-pill-on); color: #000; font-weight: 600; }
+
+/* Caixinha de avaliação no fim do painel "Aa" (depois de "Agora não") */
+.ap-rate { display: grid; gap: 14px; padding-top: 18px; border-top: 1px solid var(--k-line); }
+.ap-rate[hidden] { display: none; }
+.ap-rate p { margin: 0; font: 500 16px/1.45 var(--k-sans); color: var(--k-text); }
+.ap-rate-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ---------- Painel de aparência ("Aa") ---------- */
+.panel {
+  --bg: var(--k-header);
+  --border: var(--k-line);
+  position: fixed;
+  top: calc(var(--top) + 8px);
+  right: 12px;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - var(--top) - 24px);
+  overflow: hidden auto;
+  padding: 22px 20px;
+  background: var(--k-header);
+  border: 1px solid var(--k-line);
+  border-radius: 22px;
+  box-shadow: 0 18px 44px rgb(0 0 0 / .55);
+  z-index: 15;
+}
+.panel[hidden] { display: none; }
+
+/* ---------- Área das páginas ---------- */
+#viewer {
+  position: absolute;
+  inset: var(--top) 0 0 0;
+  overflow: auto;
+  outline: none;
+}
+#pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--page-gap);
+  padding: var(--page-gap) 0 120px;
+  min-width: min-content;
+}
+.page {
+  position: relative;
+  flex: none;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 10px rgb(0 0 0 / .4);
+  margin: 0 var(--page-gap);
+}
+body.dark .page { background: var(--paper-bg); }
+
+.page canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* O modo escuro é só um filtro de exibição: os pixels originais continuam no canvas,
+   então trocar de tema é instantâneo e as imagens podem ser recortadas sem filtro. */
+body.dark .page canvas.base, body.warm .page canvas.base { filter: url(#pdf-page-filter); }
+.page canvas.images { display: none; }
+body.dark.preserve .page canvas.images { display: block; filter: url(#pdf-image-filter); }
+body.warm :is(.toolbar, .panel, .bottombar, #sidebar, .floatbar) { filter: url(#pdf-ui-filter); }
+body.warm { --accent: #f0a850; --k-accent: #f0a850; } /* destaque âmbar com a luz azul reduzida */
+
+.page .spinner {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 22px; height: 22px;
+  margin: -11px;
+  border: 2px solid rgb(128 128 128 / .35);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Camada de texto (seleção, copiar, Ctrl+F) ---------- */
+.textLayer {
+  position: absolute;
+  text-align: initial;
+  inset: 0;
+  overflow: clip;
+  opacity: 1;
+  line-height: 1;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+  z-index: 2;
+}
+.textLayer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+.textLayer > :not(.markedContent), .textLayer .markedContent span:not(.markedContent) { z-index: 1; }
+.textLayer span.markedContent { top: 0; height: 0; }
+.textLayer span[role="img"] { user-select: none; cursor: default; }
+.textLayer ::selection { background: rgb(80 140 255 / .35); }
+.textLayer br::selection { background: transparent; }
+.textLayer .endOfContent {
+  display: block;
+  position: absolute;
+  inset: 100% 0 0;
+  z-index: 0;
+  cursor: default;
+  user-select: none;
+}
+.textLayer.selecting .endOfContent { top: 0; }
+
+/* ---------- Links ---------- */
+.linkLayer { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.linkLayer a {
+  position: absolute;
+  pointer-events: auto;
+  border-radius: 2px;
+}
+.linkLayer a:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+/* ---------- Estado vazio / carregamento ---------- */
+#empty {
+  position: absolute;
+  inset: var(--top) 0 0 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: var(--k-surface);
+}
+#empty[hidden] { display: none; }
+.dropzone {
+  width: min(460px, 100%);
+  padding: 44px 24px;
+  border: 1.5px dashed var(--k-border);
+  border-radius: 22px;
+  text-align: center;
+  transition: border-color .15s, background .15s;
+}
+.dropzone.over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.dropzone .big { width: 52px; height: 52px; color: var(--muted); }
+.dropzone .lead { font: 700 22px/1.2 var(--k-serif); margin: 14px 0 6px; }
+.dropzone .muted { margin: 4px 0 18px; }
+
+#status {
+  position: fixed;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100% - 32px));
+  padding: 22px 22px 20px;
+  background: var(--k-raised);
+  border: 1px solid var(--k-line);
+  border-radius: 22px;
+  box-shadow: 0 18px 44px rgb(0 0 0 / .5);
+  z-index: 20;
+  text-align: center;
+}
+#status[hidden] { display: none; }
+#status p { margin: 12px 0 0; font: 400 15px/1.45 var(--k-sans); overflow-wrap: anywhere; }
+#status .bar { height: 4px; border-radius: 2px; background: #48484a; overflow: hidden; }
+#status .fill { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+#status.indeterminate .fill { width: 30%; animation: slide 1.1s ease-in-out infinite; }
+#status.error .bar { display: none; }
+#status .actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+#status .actions:empty { display: none; }
+#status .actions button {
+  height: 38px; padding: 0 18px;
+  font: 500 14px var(--k-sans); color: var(--k-text);
+  background: transparent; border: 1.5px solid var(--k-border); border-radius: 999px; cursor: pointer;
+}
+#status .actions button.primary { background: var(--k-pill-on); color: #000; border-color: var(--k-pill-on); }
+@keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+
+/* ---------- Sumário ---------- */
+#sidebar {
+  position: fixed;
+  top: var(--top); bottom: 0; left: 0;
+  width: 300px;
+  display: flex; flex-direction: column;
+  background: var(--k-surface);
+  border-right: 1px solid var(--k-divider);
+  z-index: 8;
+}
+#sidebar[hidden] { display: none; }
+body.sidebar-open #viewer { left: 300px; }
+body.sidebar-open .bottombar { left: calc(50% + 150px); width: min(720px, calc(100% - 332px)); }
+.sidebar-head { padding: 20px 20px 10px; font: 700 22px/1.2 var(--k-serif); }
+#outline { flex: 1; overflow: auto; padding: 0 10px 110px; }
+.outline-empty { margin: 8px 10px; color: var(--muted); font: 400 15px var(--k-serif); }
+.outline-list { list-style: none; margin: 0; padding: 0; }
+.outline-list[hidden] { display: none; }
+.outline-row { display: flex; align-items: center; gap: 2px; padding-left: calc(var(--level) * 16px); }
+.outline-toggle {
+  flex: none; width: 26px; height: 34px; padding: 0;
+  display: grid; place-items: center;
+  background: transparent; border: 0; color: var(--muted); cursor: pointer;
+}
+.outline-toggle:disabled { visibility: hidden; }
+.outline-toggle svg { width: 15px; height: 15px; transition: transform .15s; }
+li[aria-expanded="true"] > .outline-row .outline-toggle svg { transform: rotate(90deg); }
+.outline-link {
+  flex: 1; min-width: 0;
+  min-height: 38px; padding: 8px 10px;
+  text-align: left; font: 400 15.5px/1.3 var(--k-serif); color: var(--text); text-decoration: none;
+  background: transparent; border: 0; border-radius: 10px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  cursor: pointer;
+}
+.outline-link:hover { background: var(--k-raised); }
+
+/* ---------- Pesquisa (campo como "Pesquisar no Kindle") e cores do marca-texto ---------- */
+.floatbar {
+  position: fixed;
+  top: calc(var(--top) + 10px);
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px;
+  background: var(--k-header);
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  box-shadow: 0 12px 30px rgb(0 0 0 / .45);
+  z-index: 14;
+}
+.floatbar[hidden] { display: none; }
+.searchbar {
+  right: 14px;
+  width: min(460px, calc(100vw - 28px));
+  height: 52px;
+  padding: 0 6px 0 16px;
+  background: var(--k-field);
+  border: 1.5px solid #515151;
+}
+.search-ico { width: 22px; height: 22px; color: var(--k-muted); flex: none; }
+#searchInput {
+  flex: 1; min-width: 0; height: 40px;
+  padding: 0 6px;
+  font: 400 16px var(--k-sans);
+  background: transparent; border: 0;
+}
+#searchInput::placeholder { color: var(--k-muted); }
+#searchInput:focus-visible { outline: none; }
+#searchInput::-webkit-search-cancel-button { display: none; }
+#searchCount { font: 500 13px var(--k-sans); font-variant-numeric: tabular-nums; padding: 0 6px; }
+.searchbar button.icon { width: 36px; height: 36px; }
+#hlPalette { gap: 8px; padding: 8px; }
+.hl-swatch {
+  width: 28px; height: 28px; padding: 0;
+  border-radius: 50%; border: 0; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2);
+}
+.hl-swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--k-header), 0 0 0 4px var(--k-text); }
+#highlightBtn .hl-bar { stroke: var(--hl-color, #ffd43b); stroke-width: 2.6; }
+
+/* ---------- Menu "Salvar PDF" ---------- */
+.sheetmenu {
+  position: fixed;
+  top: calc(var(--top) + 8px);
+  right: 12px;
+  width: 280px;
+  display: grid;
+  padding: 10px;
+  background: var(--k-header);
+  border: 1px solid var(--k-line);
+  border-radius: 22px;
+  box-shadow: 0 18px 44px rgb(0 0 0 / .55);
+  z-index: 15;
+}
+.sheetmenu[hidden] { display: none; }
+.sheetmenu-title { padding: 8px 12px 10px; font: 700 19px/1.2 var(--k-serif); }
+.sheetmenu button {
+  display: flex; align-items: center; gap: 14px;
+  height: 50px; padding: 0 14px;
+  font: 500 15px var(--k-sans); color: var(--k-text); text-align: left;
+  background: transparent; border: 0; border-radius: 14px;
+  cursor: pointer;
+}
+.sheetmenu button:hover, .sheetmenu button:focus-visible { background: var(--k-raised); outline: none; }
+.sheetmenu button[hidden] { display: none; }
+.sheetmenu svg { width: 22px; height: 22px; flex: none; color: var(--k-muted); }
+.sheetmenu-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 8px; padding: 14px 14px 6px;
+  border-top: 1px solid var(--k-line);
+  font: 500 15px var(--k-sans);
+  cursor: pointer;
+}
+#download[aria-expanded="true"] { background: var(--k-pill-on); color: #000; }
+
+/* Aviso rápido ("Salvo") */
+.toast {
+  position: fixed;
+  left: 50%; bottom: 96px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  font: 500 14px var(--k-sans); color: #000;
+  background: var(--k-pill-on);
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / .45);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  z-index: 21;
+  animation: toast-in .2s ease-out;
+}
+.toast[hidden] { display: none; }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 8px); } }
+body.warm .sheetmenu { filter: url(#pdf-ui-filter); }
+
+/* ---------- Telas estreitas ---------- */
+@media (max-width: 860px) {
+  .title { display: none; }
+  .toolbar { grid-template-columns: auto 1fr; }
+  body.sidebar-open #viewer { left: 0; }
+  body.sidebar-open .bottombar { left: 50%; width: calc(100% - 32px); }
+  #sidebar { box-shadow: 8px 0 24px rgb(0 0 0 / .4); }
+}
+@media (max-width: 600px) {
+  #zoomBtn, #zoomOut, #zoomIn, .bottombar .sep { display: none; }
+}
+
+/* ---------- Marcações e resultados da pesquisa ---------- */
+.hlLayer, .searchLayer { position: absolute; inset: 0; pointer-events: none; }
+.hlLayer { z-index: 1; }
+.searchLayer { z-index: 1; }
+.hl { position: absolute; border-radius: 2px; opacity: .38; }
+body:not(.dark) .hl { opacity: .5; mix-blend-mode: multiply; }
+body.warm .hlLayer { filter: url(#pdf-ui-filter); }
+.searchHit {
+  position: absolute;
+  border-radius: 2px;
+  background: rgb(255 200 0 / .35);
+  outline: 1px solid rgb(255 200 0 / .5);
+}
+.searchHit.current { background: rgb(255 120 0 / .55); outline: 2px solid rgb(255 140 0 / .9); }
+body.mode-highlight .textLayer ::selection { background: color-mix(in srgb, var(--hl-color, #ffd43b) 45%, transparent); }
+body.mode-highlight .textLayer span { cursor: text; }
+body.mode-erase .hlLayer { z-index: 4; }
+body.mode-erase .hl { pointer-events: auto; cursor: pointer; }
+body.mode-erase .hl:hover { outline: 2px solid #ff6b6b; opacity: .6; }
+body.mode-erase .textLayer { pointer-events: none; }
+
+/* ---------- Impressão ---------- */
+#printRoot { display: none; }
+@media print {
+  html, body { overflow: visible !important; height: auto !important; background: none !important; }
+  body > *:not(#printRoot) { display: none !important; }
+  #printRoot { display: block; }
+  .printPage {
+    width: 100vw; height: 100vh;
+    display: grid; place-items: center;
+    break-after: page; page-break-after: always;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    overflow: hidden;
+  }
+  .printPage:last-child { break-after: auto; page-break-after: auto; }
+  .printPage img { max-width: 100%; max-height: 100%; display: block; }
+}
