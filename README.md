@@ -45,7 +45,7 @@ Pesquisa no documento inteiro (sem diferenciar acentos) e marcações que saem n
 1. Abra `edge://extensions` e ative o **Modo do desenvolvedor**.
 2. Clique em **Carregar sem pacote** e escolha esta pasta.
 
-Requer Edge 128 ou Firefox 128 (computador ou Android) ou mais recente.
+Requer Edge 128, Firefox 140 (computador) ou Firefox 142 (Android), ou mais recentes.
 
 ## Gerar os pacotes das lojas
 
