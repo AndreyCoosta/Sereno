@@ -75,3 +75,7 @@ body {
 .rate-card-btn:hover { background: rgb(255 255 255 / .14); }
 .rate-card-btn.rate-card-yes { background: var(--k-pill-on); color: #000; font-weight: 600; }
 .rate-card-btn:focus-visible { outline: 2px solid var(--k-accent); outline-offset: 2px; }
+
+/* Firefox para Android abre o menu da extensão em tela cheia: ocupa a largura toda */
+body.touch { width: auto; min-height: 100vh; }
+body.touch .rate-card-btn, body.touch .k-button { min-height: 44px; }

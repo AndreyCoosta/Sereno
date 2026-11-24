@@ -5,7 +5,7 @@
 <h1 align="center">Sereno</h1>
 
 <p align="center">
-  Leia qualquer PDF no modo escuro no Microsoft Edge e no Firefox, com as imagens nas cores reais.
+  Leia qualquer PDF no modo escuro no Microsoft Edge e no Firefox (computador e Android), com as imagens nas cores reais.
 </p>
 
 <p align="center">
@@ -45,7 +45,7 @@ Pesquisa no documento inteiro (sem diferenciar acentos) e marcações que saem n
 1. Abra `edge://extensions` e ative o **Modo do desenvolvedor**.
 2. Clique em **Carregar sem pacote** e escolha esta pasta.
 
-Requer Edge 128 ou Firefox 128 ou mais recente.
+Requer Edge 128 ou Firefox 128 (computador ou Android) ou mais recente.
 
 ## Gerar os pacotes das lojas
 
@@ -53,7 +53,7 @@ Requer Edge 128 ou Firefox 128 ou mais recente.
 node tools/build.mjs
 ```
 
-Cria `dist/sereno-edge-<versão>.zip` e `dist/sereno-firefox-<versão>.zip`. O pacote do Firefox usa o manifesto de `platforms/firefox/`.
+Cria `dist/sereno-edge-<versão>.zip` e `dist/sereno-firefox-<versão>.zip` (o mesmo pacote serve para o Firefox do computador e do Android). O pacote do Firefox usa o manifesto de `platforms/firefox/`.
 
 ## Licença
 

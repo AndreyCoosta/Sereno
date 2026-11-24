@@ -2,7 +2,10 @@ import { createSettingsStore } from "../settings.js";
 import { mountAppearance } from "../ui/appearance.js";
 import { t, localize } from "../ui/i18n.js";
 import { REPORT_URL, reportUrl, storeUrl } from "../links.js";
-import { IS_FIREFOX } from "../platform.js";
+import { IS_FIREFOX, IS_ANDROID } from "../platform.js";
+
+// Firefox para Android abre este menu em tela cheia: ocupa a largura toda.
+document.body.classList.toggle("touch", IS_ANDROID);
 
 localize();
 import { applyThemeToTab, tabThemeState } from "../tabtheme.js";

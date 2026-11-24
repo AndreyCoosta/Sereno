@@ -483,8 +483,19 @@ body.warm .sheetmenu { filter: url(#pdf-ui-filter); }
   #sidebar { box-shadow: 8px 0 24px rgb(0 0 0 / .4); }
 }
 @media (max-width: 600px) {
-  #zoomBtn, #zoomOut, #zoomIn, .bottombar .sep { display: none; }
+  /* celular: fica só a pílula de zoom (com a porcentagem); − e + somem para caber */
+  #zoomOut, #zoomIn, .bottombar .sep { display: none; }
+  .zoom-btn { height: 36px; padding: 0 10px 0 12px; font-size: 14px; }
+  .bottombar { width: calc(100% - 20px); bottom: 12px; padding: 6px 8px; }
+  .panel, .sheetmenu { right: 8px; left: 8px; width: auto; max-width: none; }
 }
+/* Toque (celular, tablet): alvos maiores. A classe "touch" vem do viewer.js. */
+body.touch button.icon { width: 44px; height: 44px; }
+body.touch .bottombar button.icon { width: 42px; height: 42px; }
+body.touch .zoom-menu button { height: 48px; }
+body.touch .sheetmenu button { height: 54px; }
+/* Android: sem "Salvar" no mesmo arquivo (o Firefox para Android só baixa) e sem a chave do Ctrl+S */
+body.android #quickSave, body.android .sheetmenu-toggle { display: none; }
 
 /* ---------- Marcações e resultados da pesquisa ---------- */
 .hlLayer, .searchLayer { position: absolute; inset: 0; pointer-events: none; }

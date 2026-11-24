@@ -3,6 +3,7 @@ import { createSettingsStore, warmHex } from "../settings.js";
 import { colorPipeline, scaleMatrix, toSvgValues, MONO_CURVE_SLOPE } from "./colormath.js";
 import { mountAppearance } from "../ui/appearance.js";
 import { fragment } from "../ui/dom.js";
+import { IS_ANDROID } from "../platform.js";
 import { t, localize } from "../ui/i18n.js";
 import { buildOutline } from "./outline.js";
 import { Highlights, HL_COLORS } from "./highlights.js";
@@ -481,16 +482,21 @@ function updateZoomSelect(scale) {
   }
   const autoOpt = sel.querySelector('option[value="auto"]');
   if (autoOpt) autoOpt.textContent = t("zoomAutoPct", Math.round(resolveScale("auto") * 100));
-  syncZoomButton();
+  syncZoomButton(scale);
 }
 
 // ----- Menu de zoom no estilo do leitor (espelha o <select> escondido) -----
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
-function syncZoomButton() {
+const NARROW = matchMedia("(max-width: 600px)");
+let lastScale = 0;
+function syncZoomButton(scale = lastScale) {
+  lastScale = scale || lastScale;
   const opt = els.zoom.selectedOptions[0];
-  els.zoomLabel.textContent = opt ? opt.textContent : "";
+  // tela estreita (celular): só a porcentagem, para caber na barra
+  els.zoomLabel.textContent = NARROW.matches && lastScale ? `${Math.round(lastScale * 100)}%` : opt ? opt.textContent : "";
 }
+NARROW.addEventListener?.("change", () => syncZoomButton());
 
 function toggleZoomMenu(open = els.zoomMenu.hidden) {
   const menu = els.zoomMenu;
@@ -1471,6 +1477,8 @@ async function init() {
   els.zoom.insertBefore(new Option(t("zoomAuto"), "auto"), els.zoom.firstChild);
   els.zoom.value = "auto";
   syncZoomButton();
+  document.body.classList.toggle("android", IS_ANDROID);
+  document.body.classList.toggle("touch", IS_ANDROID || matchMedia("(pointer: coarse)").matches);
   store = await createSettingsStore(applySettings);
   appearance = mountAppearance(els.appearancePanel, store, { masterToggle: true });
   mountRateCard();
