@@ -5,6 +5,7 @@ import {
   THEMES, TEXT_PRESETS, BG_PRESETS, MAX_PRESETS,
   resolveTheme, contrastRatio, normalizePreset,
 } from "../settings.js";
+import { fragment } from "./dom.js";
 import { t, localize } from "./i18n.js";
 
 const ICON_SAVE = `<svg viewBox="0 0 24 24"><path d="M5 4.5h11l3.5 3.5v10A1.5 1.5 0 0 1 18 19.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5z"/><path d="M8 4.5v4.5h7V4.5M7.5 19.5v-6h9v6"/></svg>`;
@@ -86,7 +87,7 @@ let uid = 0;
  */
 export function mountAppearance(root, store, { masterToggle = false } = {}) {
   root.classList.add("ap");
-  root.innerHTML = TEMPLATE;
+  root.replaceChildren(fragment(TEMPLATE));
   localize(root);
   const ref = (name) => root.querySelector(`[data-ref="${name}"]`);
   const views = {
@@ -180,13 +181,14 @@ export function mountAppearance(root, store, { masterToggle = false } = {}) {
   for (let i = 0; i < MAX_PRESETS; i++) {
     const slot = document.createElement("div");
     slot.className = "ap-slot";
-    slot.innerHTML = `
+    slot.replaceChildren(fragment(`
       <button type="button" class="ap-slot-apply" data-r="apply"><span class="ap-swatch">Aa</span></button>
       <input type="text" class="ap-slot-name" data-r="name" maxlength="24" spellcheck="false">
       <button type="button" class="ap-icon" data-r="save" >${ICON_SAVE}</button>
       <button type="button" class="ap-icon" data-r="del" >${ICON_TRASH}</button>
-      <button type="button" class="ap-slot-new" data-r="new">${t("savePreset")}</button>`;
+      <button type="button" class="ap-slot-new" data-r="new"></button>`));
     const r = (n) => slot.querySelector(`[data-r="${n}"]`);
+    r("new").textContent = t("savePreset");
     const defaultName = t("presetN", i + 1);
     r("apply").setAttribute("aria-label", t("usePreset", defaultName));
     r("name").setAttribute("aria-label", t("presetNameN", i + 1));

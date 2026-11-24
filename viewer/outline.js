@@ -1,5 +1,6 @@
 // Sumário (marcadores do PDF) no painel lateral.
 
+import { fragment } from "../ui/dom.js";
 import { t } from "../ui/i18n.js";
 
 const CHEVRON = `<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>`;
@@ -42,7 +43,7 @@ function buildList(items, nav, level) {
     toggle.className = "outline-toggle";
     toggle.tabIndex = -1;
     if (hasChildren) {
-      toggle.innerHTML = CHEVRON;
+      toggle.replaceChildren(fragment(CHEVRON));
       toggle.setAttribute("aria-label", t("expand"));
     } else {
       toggle.disabled = true;

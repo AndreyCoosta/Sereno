@@ -2,6 +2,7 @@ import { createSettingsStore } from "../settings.js";
 import { mountAppearance } from "../ui/appearance.js";
 import { t, localize } from "../ui/i18n.js";
 import { REPORT_URL, reportUrl, storeUrl } from "../links.js";
+import { IS_FIREFOX } from "../platform.js";
 
 localize();
 import { applyThemeToTab, tabThemeState } from "../tabtheme.js";
@@ -44,7 +45,8 @@ applyBtn.addEventListener("click", async () => {
 });
 
 // ----- Aviso: PDFs do computador precisam de "Permitir acesso a URLs de arquivo" -----
-$("fileNotice").hidden = await chrome.extension.isAllowedFileSchemeAccess();
+// (no Firefox essa opção não existe: o aviso fica escondido)
+$("fileNotice").hidden = IS_FIREFOX || await chrome.extension.isAllowedFileSchemeAccess();
 
 // ----- Relatar um problema -----
 if (REPORT_URL) {

@@ -2,6 +2,7 @@ import * as pdfjsLib from "../lib/pdf.min.mjs";
 import { createSettingsStore, warmHex } from "../settings.js";
 import { colorPipeline, scaleMatrix, toSvgValues, MONO_CURVE_SLOPE } from "./colormath.js";
 import { mountAppearance } from "../ui/appearance.js";
+import { fragment } from "../ui/dom.js";
 import { t, localize } from "../ui/i18n.js";
 import { buildOutline } from "./outline.js";
 import { Highlights, HL_COLORS } from "./highlights.js";
@@ -502,7 +503,7 @@ function toggleZoomMenu(open = els.zoomMenu.hidden) {
       b.type = "button";
       b.setAttribute("role", "menuitemradio");
       b.setAttribute("aria-checked", String(o.value === els.zoom.value));
-      b.innerHTML = `<span></span>${CHECK}`;
+      b.replaceChildren(fragment(`<span></span>${CHECK}`));
       b.firstChild.textContent = o.textContent;
       b.addEventListener("click", () => {
         toggleZoomMenu(false);
@@ -756,12 +757,12 @@ function mountRateCard() {
   card.className = "ap-rate";
   card.id = "rateCard";
   card.hidden = true;
-  card.innerHTML = `
+  card.replaceChildren(fragment(`
     <p></p>
     <div class="ap-rate-actions">
       <button type="button" class="rate-btn" data-r="never"></button>
       <button type="button" class="rate-btn rate-yes" data-r="now"></button>
-    </div>`;
+    </div>`));
   card.querySelector("p").textContent = t("rateAsk");
   card.querySelector('[data-r="never"]').textContent = t("rateNever");
   card.querySelector('[data-r="now"]').textContent = t("rateNow");

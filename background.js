@@ -1,6 +1,7 @@
 import { getSettings, setSettings, VIEWER_URL, viewerUrlFor } from "./settings.js";
 import { applyThemeToTab } from "./tabtheme.js";
 import { UNINSTALL_URL } from "./links.js";
+import { IS_FIREFOX } from "./platform.js";
 
 const REDIRECT_RULE_ID = 1;
 const BYPASS_RULE_BASE = 1000;
@@ -11,6 +12,7 @@ const BYPASS_RULE_BASE = 1000;
 // funciona mesmo quando a URL não termina em ".pdf".
 // ---------------------------------------------------------------------------
 async function syncRedirectRule() {
+  if (IS_FIREFOX) return; // no Firefox o redirecionamento é feito pelo webRequest (abaixo)
   const { autoOpen } = await getSettings();
   const addRules = autoOpen
     ? [{
@@ -52,8 +54,43 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && "autoOpen" in changes) syncRedirectRule();
 });
 
+// ---------------------------------------------------------------------------
+// Firefox: o declarativeNetRequest do Firefox não filtra pelo cabeçalho da resposta,
+// então os PDFs são reconhecidos pelo webRequest (bloqueante, permitido no Firefox),
+// antes que o leitor de PDF do próprio Firefox os abra.
+// ---------------------------------------------------------------------------
+const firefoxBypass = new Set();   // URLs liberadas por "Abrir original"
+let firefoxAutoOpen = true;
+
+if (IS_FIREFOX) {
+  getSettings().then((s) => { firefoxAutoOpen = s.autoOpen; });
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "sync" && "autoOpen" in changes) firefoxAutoOpen = changes.autoOpen.newValue !== false;
+  });
+  chrome.storage.session.get("bypassUrls").then(({ bypassUrls = [] }) => bypassUrls.forEach((u) => firefoxBypass.add(u)));
+
+  const header = (headers, name) => headers?.find((h) => h.name.toLowerCase() === name)?.value?.toLowerCase() || "";
+  browser.webRequest.onHeadersReceived.addListener(
+    (details) => {
+      if (!firefoxAutoOpen || details.method !== "GET") return {};
+      if (details.url.startsWith(VIEWER_URL) || firefoxBypass.has(details.url)) return {};
+      const type = header(details.responseHeaders, "content-type");
+      if (!/^application\/(x-)?pdf/.test(type)) return {};
+      if (header(details.responseHeaders, "content-disposition").startsWith("attachment")) return {};
+      return { redirectUrl: viewerUrlFor(details.url) };
+    },
+    { urls: ["http://*/*", "https://*/*"], types: ["main_frame", "sub_frame"] },
+    ["blocking", "responseHeaders"],
+  );
+}
+
 // "Abrir original": deixa uma URL passar sem redirecionar (até o navegador fechar).
 async function bypass(url) {
+  if (IS_FIREFOX) {
+    firefoxBypass.add(url);
+    await chrome.storage.session.set({ bypassUrls: [...firefoxBypass] }).catch(() => {});
+    return;
+  }
   if (url.startsWith("file:")) {
     const { bypassFiles = [] } = await chrome.storage.session.get("bypassFiles");
     if (!bypassFiles.includes(url)) bypassFiles.push(url);
@@ -78,7 +115,9 @@ async function bypass(url) {
 // interceptamos a navegação antes dela acontecer.
 // Requer "Permitir acesso a URLs de arquivo" em edge://extensions.
 // ---------------------------------------------------------------------------
-chrome.webNavigation.onBeforeNavigate.addListener(
+// O Firefox não deixa extensões lerem arquivos do computador por file://; lá, o PDF local
+// é aberto pelo próprio leitor (Ctrl+O ou arrastando o arquivo).
+if (!IS_FIREFOX) chrome.webNavigation.onBeforeNavigate.addListener(
   async ({ tabId, frameId, url }) => {
     if (frameId !== 0) return;
     const { autoOpen } = await getSettings();

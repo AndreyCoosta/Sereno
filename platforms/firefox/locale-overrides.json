@@ -1,0 +1,47 @@
+{
+  "en": {
+    "tabProtected": "This tab is protected by Firefox.",
+    "errLocalFile": "Firefox doesn't let extensions open files from your computer by address. Press Ctrl+O or drag the PDF into this window.",
+    "fileAccessNotice": ""
+  },
+  "pt_BR": {
+    "tabProtected": "Esta guia é protegida pelo Firefox.",
+    "errLocalFile": "O Firefox não deixa extensões abrirem arquivos do computador pelo endereço. Pressione Ctrl+O ou arraste o PDF para esta janela.",
+    "fileAccessNotice": ""
+  },
+  "pt": {
+    "tabProtected": "Esta guia é protegida pelo Firefox.",
+    "errLocalFile": "O Firefox não deixa extensões abrirem arquivos do computador pelo endereço. Pressione Ctrl+O ou arraste o PDF para esta janela.",
+    "fileAccessNotice": ""
+  },
+  "pt_PT": {
+    "tabProtected": "Este separador está protegido pelo Firefox.",
+    "errLocalFile": "O Firefox não permite que extensões abram ficheiros do computador pelo endereço. Prima Ctrl+O ou arraste o PDF para esta janela.",
+    "fileAccessNotice": ""
+  },
+  "es": {
+    "tabProtected": "Firefox protege esta pestaña.",
+    "errLocalFile": "Firefox no permite que las extensiones abran archivos del equipo por su dirección. Pulsa Ctrl+O o arrastra el PDF a esta ventana.",
+    "fileAccessNotice": ""
+  },
+  "es_419": {
+    "tabProtected": "Firefox protege esta pestaña.",
+    "errLocalFile": "Firefox no permite que las extensiones abran archivos de la computadora por su dirección. Presiona Ctrl+O o arrastra el PDF a esta ventana.",
+    "fileAccessNotice": ""
+  },
+  "fr": {
+    "tabProtected": "Cet onglet est protégé par Firefox.",
+    "errLocalFile": "Firefox ne permet pas aux extensions d'ouvrir les fichiers de l'ordinateur par leur adresse. Appuyez sur Ctrl+O ou faites glisser le PDF dans cette fenêtre.",
+    "fileAccessNotice": ""
+  },
+  "it": {
+    "tabProtected": "Questa scheda è protetta da Firefox.",
+    "errLocalFile": "Firefox non permette alle estensioni di aprire i file del computer tramite indirizzo. Premi Ctrl+O o trascina il PDF in questa finestra.",
+    "fileAccessNotice": ""
+  },
+  "de": {
+    "tabProtected": "Dieser Tab ist durch Firefox geschützt.",
+    "errLocalFile": "Firefox erlaubt Erweiterungen nicht, Dateien vom Computer über ihre Adresse zu öffnen. Drücken Sie Strg+O oder ziehen Sie das PDF in dieses Fenster.",
+    "fileAccessNotice": ""
+  }
+}
