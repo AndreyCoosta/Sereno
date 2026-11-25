@@ -137,7 +137,7 @@ async function computeImageRects(page) {
   let ctm = [1, 0, 0, 1, 0, 0];
   let inAnnotation = 0;
 
-  const addUnitSquare = (m) => {
+  const addUnitSquare = (m, objId) => {
     if (inAnnotation) return;
     const full = Util.transform(vp.transform, m);
     const xs = [], ys = [];
@@ -148,7 +148,10 @@ async function computeImageRects(page) {
     const x0 = Math.max(0, Math.min(...xs)), x1 = Math.min(vp.width, Math.max(...xs));
     const y0 = Math.max(0, Math.min(...ys)), y1 = Math.min(vp.height, Math.max(...ys));
     if (x1 - x0 < MIN_IMAGE_SIDE || y1 - y0 < MIN_IMAGE_SIDE) return;
-    rects.push([x0 / vp.width, y0 / vp.height, x1 / vp.width, y1 / vp.height]);
+    const r = [x0 / vp.width, y0 / vp.height, x1 / vp.width, y1 / vp.height];
+    // Guardado para redesenhar imagens com transparência (ver buildImageOverlay).
+    if (objId) { r.objId = objId; r.m = full; r.vw = vp.width; }
+    rects.push(r);
   };
 
   for (let i = 0; i < fnArray.length; i++) {
@@ -179,6 +182,8 @@ async function computeImageRects(page) {
         ctm = stack.pop() ?? ctm;
         break;
       case OPS.paintImageXObject:
+        addUnitSquare(ctm, args[0]);
+        break;
       case OPS.paintInlineImageXObject:
         addUnitSquare(ctm);
         break;
@@ -301,16 +306,56 @@ async function buildImageOverlay(p, base) {
   overlay.height = base.height;
   const octx = overlay.getContext("2d");
   const W = base.width, H = base.height;
-  for (const [x0, y0, x1, y1] of rects) {
+  for (const rect of rects) {
+    const [x0, y0, x1, y1] = rect;
     // Copia o miolo da imagem (sem a borda suavizada) esticado até cobrir a borda,
     // para não sobrar uma linha de 1px clara/invertida em volta.
     const sx = Math.ceil(x0 * W), sy = Math.ceil(y0 * H);
     const sw = Math.min(W, Math.floor(x1 * W)) - sx, sh = Math.min(H, Math.floor(y1 * H)) - sy;
     const dx = Math.floor(x0 * W), dy = Math.floor(y0 * H);
     const dw = Math.min(W, Math.ceil(x1 * W)) - dx, dh = Math.min(H, Math.ceil(y1 * H)) - dy;
-    if (sw > 0 && sh > 0) octx.drawImage(base, sx, sy, sw, sh, dx, dy, dw, dh);
+    const clear = transparentImage(p.page, rect);
+    if (clear === "skip") continue;
+    if (clear) {
+      // Imagem com transparência (logo, marca d'água): desenha só a própria imagem,
+      // sem o fundo branco da página que aparecia como um quadrado claro.
+      const k = W / rect.vw, m = rect.m;
+      octx.setTransform(k * m[0], k * m[1], k * m[2], k * m[3], k * m[4], k * m[5]);
+      octx.transform(1, 0, 0, -1, 0, 1);
+      octx.drawImage(clear, 0, 0, 1, 1);
+      octx.setTransform(1, 0, 0, 1, 0, 0);
+    } else if (sw > 0 && sh > 0) octx.drawImage(base, sx, sy, sw, sh, dx, dy, dw, dh);
   }
   return overlay;
+}
+
+// Devolve a imagem (como canvas) se ela tiver pixels transparentes; senão null.
+function transparentImage(page, rect) {
+  if (!rect.objId) return null;
+  if (rect.clear !== undefined) return rect.clear;
+  try {
+    const objs = rect.objId.startsWith("g_") ? page.commonObjs : page.objs;
+    if (!objs.has(rect.objId)) return null;
+    rect.clear = null;
+    const img = objs.get(rect.objId);
+    const w = img.bitmap?.width ?? img.width, h = img.bitmap?.height ?? img.height;
+    if (!w || !h) return null;
+    const c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    const cx = c.getContext("2d", { willReadFrequently: true });
+    if (img.bitmap) cx.drawImage(img.bitmap, 0, 0);
+    else if (img.data?.length === w * h * 4) cx.putImageData(new ImageData(new Uint8ClampedArray(img.data), w, h), 0, 0);
+    else return null;
+    const a = cx.getImageData(0, 0, w, h).data;
+    let transparent = false, colorful = false;
+    for (let i = 0; i < a.length; i += 16) {
+      if (a[i + 3] < 250) transparent = true;
+      if (a[i + 3] > 40 && Math.max(a[i], a[i + 1], a[i + 2]) - Math.min(a[i], a[i + 1], a[i + 2]) > 40) colorful = true;
+    }
+    // Transparente e sem cor (marca d'água cinza): escurece junto com a página.
+    if (transparent) rect.clear = colorful ? c : "skip";
+  } catch { /* sem acesso à imagem: usa a cópia normal */ }
+  return rect.clear ?? null;
 }
 
 function releasePage(p) {
