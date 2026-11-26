@@ -65,6 +65,12 @@ button.primary:hover { filter: brightness(1.06); }
   background: var(--k-header);
   z-index: 10;
   user-select: none;
+  transition: opacity .35s ease, transform .35s ease;
+}
+.bottombar.idle {
+  opacity: 0;
+  transform: translateX(-50%) translateY(14px);
+  pointer-events: none;
 }
 .group { display: flex; align-items: center; gap: 2px; min-width: 0; }
 .group.end { justify-content: flex-end; }

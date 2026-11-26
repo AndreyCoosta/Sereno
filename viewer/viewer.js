@@ -1551,3 +1551,18 @@ window.addEventListener("keydown", (e) => {
 }, true);
 
 init();
+
+// ----- Barra de baixo: some depois de um tempo parado e volta ao mexer o mouse -----
+{
+  const bar = document.getElementById("navGroup");
+  const IDLE_MS = 2500;
+  let timer = 0;
+  const busy = () => bar.matches(":hover, :focus-within") || !document.getElementById("zoomMenu")?.hidden;
+  const hideLater = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => (busy() ? hideLater() : bar.classList.add("idle")), IDLE_MS);
+  };
+  const wake = () => { bar.classList.remove("idle"); hideLater(); };
+  for (const ev of ["mousemove", "pointerdown", "keydown", "touchstart"]) window.addEventListener(ev, wake, { passive: true });
+  hideLater();
+}
