@@ -1,6 +1,8 @@
 // Gera os pacotes para as lojas a partir do mesmo código:
 //   dist/sereno-edge-<versão>.zip      (Microsoft Edge Add-ons)
 //   dist/sereno-firefox-<versão>.zip   (addons.mozilla.org)
+//   dist/sereno-chrome-<versão>.zip    (Chrome Web Store)
+//   dist/sereno-opera-<versão>.zip     (addons.opera.com)
 // Uso: node tools/build.mjs
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -53,4 +55,20 @@ for (const [locale, keys] of Object.entries(overrides)) {
 }
 zipDir(ffDir, join(DIST, `sereno-firefox-${version}.zip`));
 
-console.log(`dist/sereno-edge-${version}.zip\ndist/sereno-firefox-${version}.zip`);
+// Chrome e Opera: o mesmo código do Edge, com os textos que citam o Edge trocados.
+for (const [id, name] of [["chrome", "Chrome"], ["opera", "Opera"]]) {
+  const dir = join(DIST, id);
+  copySource(dir);
+  const fix = (t) => t.replaceAll("edge://", `${id}://`).replace(/\bEdge\b/g, name);
+  for (const locale of readdirSync(join(dir, "_locales"))) {
+    const file = join(dir, "_locales", locale, "messages.json");
+    const messages = readJson(file);
+    for (const m of Object.values(messages)) m.message = fix(m.message);
+    writeJson(file, messages);
+  }
+  const popup = join(dir, "popup/popup.html");
+  writeFileSync(popup, fix(readFileSync(popup, "utf8")));
+  zipDir(dir, join(DIST, `sereno-${id}-${version}.zip`));
+}
+
+console.log(["edge", "firefox", "chrome", "opera"].map((b) => `dist/sereno-${b}-${version}.zip`).join("\n"));
