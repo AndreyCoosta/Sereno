@@ -66,6 +66,21 @@ for (const [id, name] of [["chrome", "Chrome"], ["opera", "Opera"]]) {
     for (const m of Object.values(messages)) m.message = fix(m.message);
     writeJson(file, messages);
   }
+  if (id === "opera") {
+    // A loja do Opera recusa .bcmap e .pfb: cada arquivo vira "<nome>.js" com o conteúdo em base64.
+    for (const sub of ["lib/cmaps", "lib/standard_fonts"]) {
+      for (const f of readdirSync(join(dir, sub))) {
+        if (!/\.(bcmap|pfb|ttf)$/.test(f)) continue;
+        const src = join(dir, sub, f);
+        writeFileSync(src + ".js", `"${readFileSync(src).toString("base64")}";\n`);
+        rmSync(src);
+      }
+    }
+    const viewer = join(dir, "viewer/viewer.js");
+    const code = readFileSync(viewer, "utf8");
+    if (!code.includes("const ASSETS_AS_JS = false;")) throw new Error("ASSETS_AS_JS não encontrado");
+    writeFileSync(viewer, code.replace("const ASSETS_AS_JS = false;", "const ASSETS_AS_JS = true;"));
+  }
   const popup = join(dir, "popup/popup.html");
   writeFileSync(popup, fix(readFileSync(popup, "utf8")));
   zipDir(dir, join(DIST, `sereno-${id}-${version}.zip`));

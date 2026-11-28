@@ -12,6 +12,25 @@ import { getSaveHandle, setSaveHandle, ensureWritable } from "./savehandles.js";
 import { storeUrl } from "../links.js";
 
 const { OPS, Util } = pdfjsLib;
+
+// Versão do Opera: a loja não aceita arquivos .bcmap/.pfb, então o script de build guarda
+// os mapas de caracteres e as fontes padrão em arquivos .js (o conteúdo em base64, entre aspas).
+const ASSETS_AS_JS = false;
+const readJsAsset = async (url) => {
+  const text = await (await fetch(url + ".js")).text();
+  const bin = atob(text.trim().slice(1, -2));
+  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+};
+class JsCMapFactory {
+  constructor({ baseUrl }) { this.baseUrl = baseUrl; }
+  async fetch({ name }) {
+    return { cMapData: await readJsAsset(`${this.baseUrl}${name}.bcmap`), isCompressed: true };
+  }
+}
+class JsFontFactory {
+  constructor({ baseUrl }) { this.baseUrl = baseUrl; }
+  async fetch({ filename }) { return readJsAsset(`${this.baseUrl}${filename}`); }
+}
 pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("lib/pdf.worker.min.mjs");
 
 const CSS_UNITS = 96 / 72;          // 100% = tamanho real na tela, como no Edge
@@ -700,6 +719,7 @@ async function openDocument(source, { filename, fileUrl = null, handle = null } 
     cMapUrl: chrome.runtime.getURL("lib/cmaps/"),
     cMapPacked: true,
     standardFontDataUrl: chrome.runtime.getURL("lib/standard_fonts/"),
+    ...(ASSETS_AS_JS ? { useWorkerFetch: false, CMapReaderFactory: JsCMapFactory, StandardFontDataFactory: JsFontFactory } : {}),
     isEvalSupported: false,
     enableXfa: false,
   });
